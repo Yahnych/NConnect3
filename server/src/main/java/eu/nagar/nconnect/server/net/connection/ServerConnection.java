@@ -4,6 +4,9 @@
 
 package eu.nagar.nconnect.server.net.connection;
 
+import eu.nagar.nconnect.api.event.server.ServerConnectedEvent;
+import eu.nagar.nconnect.api.event.server.ServerDisconnectedEvent;
+import eu.nagar.nconnect.api.server.GameServer;
 import eu.nagar.nconnect.server.net.protocol.Packet;
 import eu.nagar.nconnect.server.net.protocol.PacketCodec;
 import eu.nagar.nconnect.server.net.protocol.PacketRegister;
@@ -18,10 +21,12 @@ import java.util.Map;
 
 public class ServerConnection extends WebSocketClient {
     private NConnectPlayer player;
+    private GameServer server;
 
-    public ServerConnection(NConnectPlayer player, URI serverUri, Map<String, String> httpHeaders) {
+    public ServerConnection(NConnectPlayer player, GameServer server, URI serverUri, Map<String, String> httpHeaders) {
         super(serverUri, httpHeaders);
         this.player = player;
+        this.server = server;
 
         setReuseAddr(true);
         setTcpNoDelay(true);
@@ -38,6 +43,9 @@ public class ServerConnection extends WebSocketClient {
     public void onOpen(ServerHandshake serverHandshake) {
         send(new byte[] {(byte) 254, 6, 0, 0, 0});
         send(new byte[] {(byte) 255, 1, 0, 0, 0});
+
+        ServerConnectedEvent serverConnectedEvent = new ServerConnectedEvent(player, server);
+        player.getNConnectServer().getEventManager().callEvent(serverConnectedEvent);
     }
 
     @Override
@@ -64,7 +72,8 @@ public class ServerConnection extends WebSocketClient {
 
     @Override
     public void onClose(int i, String s, boolean b) {
-
+        ServerDisconnectedEvent serverDisconnectedEvent = new ServerDisconnectedEvent(player, server, i, s);
+        player.getNConnectServer().getEventManager().callEvent(serverDisconnectedEvent);
     }
 
     @Override

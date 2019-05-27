@@ -100,12 +100,13 @@ public class NConnectPlayer implements Player {
                     e.printStackTrace();
                 }
             }
-            this.serverConnection = new ServerConnection(this, new URI(server.getAddress()), new HashMap<String, String>() {{
+            this.serverConnection = new ServerConnection(this, server, new URI(server.getAddress()), new HashMap<String, String>() {{
                 put("Cache-Control", "None");
                 put("User-Agent", "Nagar (Niall Agar) Group Nconnect Server Upstream Connection N3 v1.3-A");
                 put("X-Real-IP", address);
             }});
             this.serverConnection.connect();
+
             for (String motdLine : server.getMotd()) {
                 this.sendMessage(motdLine);
             }
