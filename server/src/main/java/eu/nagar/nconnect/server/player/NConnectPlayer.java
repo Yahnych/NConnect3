@@ -115,6 +115,12 @@ public class NConnectPlayer implements Player {
         }
     }
 
+    @Override
+    public void kick() {
+        socket.close();
+        serverConnection.close();
+    }
+
     public void sendPacket(Packet packet) {
         PacketCodec packetCodec = PacketRegister.CLIENTBOUND.getCodec(packet.getClass());
         if (socket.isOpen()) {

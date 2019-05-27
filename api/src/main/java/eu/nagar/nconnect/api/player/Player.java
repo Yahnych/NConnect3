@@ -32,4 +32,9 @@ public interface Player extends CommandSender {
      * @param server game server to connect to.
      */
     void connectTo(GameServer server);
+
+    /**
+     * Kick the player
+     */
+    void kick();
 }
