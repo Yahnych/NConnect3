@@ -148,7 +148,10 @@ public class NConnectPlayer implements Player {
 
     @Override
     public boolean hasPermission(String permission) {
-        return false;
+        //TODO Implement permissions system.
+        return permission.equals("nconnect.help")
+                || permission.equals("nconnect.server")
+                || permission.equals("nconnect.plugins");
     }
 
     public NConnectServer getNConnectServer() {
