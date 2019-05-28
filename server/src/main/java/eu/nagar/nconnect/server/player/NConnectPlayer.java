@@ -28,7 +28,7 @@ public class NConnectPlayer implements Player {
     private NConnectServer server;
     private String name = "";
     private String address;
-    private Position mousePosition;
+    private Position mousePosition = new Position(0, 0);
     private WebSocket socket;
     private ServerConnection serverConnection;
     private DownstreamHandler downstreamHandler;

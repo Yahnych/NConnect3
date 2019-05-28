@@ -8,21 +8,21 @@ import eu.nagar.nconnect.server.net.protocol.Packet;
 import eu.nagar.nconnect.server.net.protocol.PacketReceiver;
 
 public class PacketInMouse extends Packet {
-    private int mouseX, mouseY;
+    private double mouseX, mouseY;
 
-    public void setMouseY(int mouseY) {
+    public void setMouseY(double mouseY) {
         this.mouseY = mouseY;
     }
 
-    public void setMouseX(int mouseX) {
+    public void setMouseX(double mouseX) {
         this.mouseX = mouseX;
     }
 
-    public int getMouseY() {
+    public double getMouseY() {
         return mouseY;
     }
 
-    public int getMouseX() {
+    public double getMouseX() {
         return mouseX;
     }
 

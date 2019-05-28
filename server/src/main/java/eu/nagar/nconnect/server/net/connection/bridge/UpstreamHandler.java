@@ -48,7 +48,7 @@ public class UpstreamHandler extends PacketReceiver {
 
     @Override
     public void handle(PacketInMouse packet) {
-        PlayerMouseEvent playerMouseEvent = new PlayerMouseEvent(player, new Position(packet.getMouseX(), packet.getMouseY()));
+        PlayerMouseEvent playerMouseEvent = new PlayerMouseEvent(player, new Position((int) packet.getMouseX(), (int) packet.getMouseY()));
         player.getNConnectServer().getEventManager().callEvent(playerMouseEvent);
 
         if (!playerMouseEvent.isCancelled()) {

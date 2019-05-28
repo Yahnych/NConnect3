@@ -4,6 +4,7 @@
 
 package eu.nagar.nconnect.server.net.protocol.codec;
 
+import com.google.common.primitives.UnsignedInteger;
 import eu.nagar.nconnect.server.net.protocol.Protocol;
 import eu.nagar.nconnect.server.net.protocol.packet.PacketInMouse;
 import eu.nagar.nconnect.server.net.protocol.PacketCodec;
@@ -17,8 +18,8 @@ public class CodecInMouse implements PacketCodec<PacketInMouse> {
     public PacketInMouse decode(ByteBuffer buffer, Protocol protocol) {
         buffer.get();
 
-        int mouseX = buffer.getInt();
-        int mouseY = buffer.getInt();
+        double mouseX = buffer.getInt();
+        double mouseY = buffer.getInt();
 
         PacketInMouse payload = new PacketInMouse();
 
@@ -33,10 +34,10 @@ public class CodecInMouse implements PacketCodec<PacketInMouse> {
         ByteBuffer buffer = ByteBuffer.allocate(13);
 
         buffer.put((byte) 16);
-        buffer.order(ByteOrder.BIG_ENDIAN);
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
 
-        buffer.putInt(payload.getMouseX());
-        buffer.putInt(payload.getMouseY());
+        buffer.putInt((int) payload.getMouseX());
+        buffer.putInt((int) payload.getMouseY());
 
         return buffer;
     }

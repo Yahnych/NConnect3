@@ -24,6 +24,7 @@ import org.java_websocket.server.WebSocketServer;
 import java.awt.*;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
+import java.nio.ByteOrder;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
@@ -105,6 +106,8 @@ public class WebSocketHandler extends WebSocketServer {
         if (buffer.limit() > 255) {
             return;
         }
+
+        buffer.order(ByteOrder.LITTLE_ENDIAN);
 
         PacketCodec packetCodec = PacketRegister.SERVERBOUND.getCodec(buffer.get(0));
         if (packetCodec == null) {
