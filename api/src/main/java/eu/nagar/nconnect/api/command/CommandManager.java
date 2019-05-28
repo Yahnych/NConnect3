@@ -4,20 +4,20 @@
 
 package eu.nagar.nconnect.api.command;
 
-import java.util.Set;
+import java.util.Collection;
 
 public interface CommandManager {
     /**
      * Register a command.
      * @param command command to register
      */
-    void registerCommand(Command command);
+    void registerCommand(CommandRegistrar registrar, Command command);
 
     /**
      * Get all registered commands
      * @return collection of commands.
      */
-    Set<Command> getCommands();
+    Collection<Command> getCommands();
 
     /**
      * Get a specified command by it's name.

@@ -81,6 +81,7 @@ public class WebSocketHandler extends WebSocketServer {
     public void onClose(WebSocket webSocket, int i, String reason, boolean b) {
         server.getLogger().info(webSocket.getRemoteSocketAddress().toString() + " Disconnected.");
         Player player = socketPlayerMap.get(webSocket);
+
         PlayerDisconnectEvent playerDisconnectEvent = new PlayerDisconnectEvent(player, i, reason);
         server.getEventManager().callEvent(playerDisconnectEvent);
         socketPlayerMap.remove(webSocket);

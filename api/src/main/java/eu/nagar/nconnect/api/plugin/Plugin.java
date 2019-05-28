@@ -5,12 +5,13 @@
 package eu.nagar.nconnect.api.plugin;
 
 import eu.nagar.nconnect.api.ProxyServer;
+import eu.nagar.nconnect.api.command.CommandRegistrar;
 import org.simpleyaml.configuration.file.YamlFile;
 import org.slf4j.Logger;
 
 import java.io.File;
 
-public abstract class Plugin {
+public abstract class Plugin implements CommandRegistrar {
     private ProxyServer server;
     private Logger logger;
     private PluginDescription description;

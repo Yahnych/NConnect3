@@ -30,6 +30,7 @@ public class NConnectPlayer implements Player {
     private String address;
     private Position mousePosition = new Position(0, 0);
     private WebSocket socket;
+    private GameServer gameServer;
     private ServerConnection serverConnection;
     private DownstreamHandler downstreamHandler;
     private UpstreamHandler upstreamHandler;
@@ -110,9 +111,15 @@ public class NConnectPlayer implements Player {
             for (String motdLine : server.getMotd()) {
                 this.sendMessage(motdLine);
             }
+            this.gameServer = server;
         } catch (URISyntaxException e) {
             e.printStackTrace();
         }
+    }
+
+    @Override
+    public GameServer getGameServer() {
+        return gameServer;
     }
 
     @Override

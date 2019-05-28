@@ -4,6 +4,8 @@
 
 package eu.nagar.nconnect.server.command;
 
+import com.google.common.collect.ArrayListMultimap;
+import com.google.common.collect.Multimap;
 import eu.nagar.nconnect.api.ProxyServer;
 import eu.nagar.nconnect.api.command.*;
 import eu.nagar.nconnect.server.NConnectServer;
@@ -13,15 +15,20 @@ import java.util.*;
 
 public class StandardCommandManager implements CommandManager {
     private NConnectServer server;
-    private Set<Command> registeredCommands = new HashSet<>();
+    private Multimap<CommandRegistrar, Command> registeredCommands = ArrayListMultimap.create();
 
     public StandardCommandManager(NConnectServer server) {
         this.server = server;
     }
 
     @Override
-    public Set<Command> getCommands() {
-        return registeredCommands;
+    public void registerCommand(CommandRegistrar registrar, Command command) {
+        registeredCommands.put(registrar, command);
+    }
+
+    @Override
+    public Collection<Command> getCommands() {
+        return registeredCommands.values();
     }
 
     @Override
@@ -31,11 +38,6 @@ public class StandardCommandManager implements CommandManager {
         }
 
         return null;
-    }
-
-    @Override
-    public void registerCommand(Command command) {
-        registeredCommands.add(command);
     }
 
     public CommandResult dispatchCommand(String commandString, CommandSender sender) {

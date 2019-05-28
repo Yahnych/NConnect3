@@ -28,6 +28,12 @@ public interface Player extends CommandSender {
     Position getMousePosition();
 
     /**
+     * Get the game server the player is connected to.
+     * @return game server
+     */
+    GameServer getGameServer();
+
+    /**
      * Connect to a server
      * @param server game server to connect to.
      */

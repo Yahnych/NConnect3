@@ -49,18 +49,6 @@ public class StandardPluginManager implements PluginManager {
     }
 
     @Override
-    public void registerCommand(Plugin plugin, Command command) {
-        //TODO Handle plugin-command mapping
-        server.getCommandManager().registerCommand(command);
-    }
-
-    @Override
-    public void registerEvents(Plugin plugin, EventListener listener) {
-        //TODO Handle plugin-listener mapping.
-        server.getEventManager().registerEvents(listener);
-    }
-
-    @Override
     public void loadPlugins() {
         if (!pluginDirectory.exists()) {
             if(!pluginDirectory.mkdirs()) {
@@ -138,6 +126,7 @@ public class StandardPluginManager implements PluginManager {
             LOGGER.info("Disabling " + plugin.getDescription().name() + " " + plugin.getDescription().version() + ".");
             try {
                 plugin.onDisable();
+                server.getEventManager().unregisterEvents(plugin);
             } catch (Exception error) {
                 LOGGER.error("Error occurred whilst disabling " + plugin.getDescription().name());
             }

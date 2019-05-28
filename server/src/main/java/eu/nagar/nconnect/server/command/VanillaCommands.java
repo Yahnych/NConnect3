@@ -6,10 +6,11 @@ package eu.nagar.nconnect.server.command;
 
 import eu.nagar.nconnect.api.command.CommandBuilder;
 import eu.nagar.nconnect.api.command.Command;
+import eu.nagar.nconnect.api.command.CommandRegistrar;
 import eu.nagar.nconnect.server.NConnectServer;
 import eu.nagar.nconnect.server.command.vanilla.*;
 
-public class VanillaCommands {
+public class VanillaCommands implements CommandRegistrar {
     public void register(NConnectServer server) {
         Command help = new CommandBuilder()
                 .setName("help")
@@ -53,11 +54,19 @@ public class VanillaCommands {
                 .setExecutor(new ReloadExecutor(server))
                 .build();
 
-        server.getCommandManager().registerCommand(help);
-        server.getCommandManager().registerCommand(connect);
-        server.getCommandManager().registerCommand(plugins);
-        server.getCommandManager().registerCommand(exit);
-        server.getCommandManager().registerCommand(say);
-        server.getCommandManager().registerCommand(reload);
+        Command list = new CommandBuilder()
+                .setName("list")
+                .setDescription("List connected players")
+                .setPermission("nconnect.list")
+                .setExecutor(new ListExecutor(server))
+                .build();
+
+        server.getCommandManager().registerCommand(this, help);
+        server.getCommandManager().registerCommand(this, connect);
+        server.getCommandManager().registerCommand(this, plugins);
+        server.getCommandManager().registerCommand(this, exit);
+        server.getCommandManager().registerCommand(this, say);
+        server.getCommandManager().registerCommand(this, reload);
+        server.getCommandManager().registerCommand(this, list);
     }
 }
