@@ -19,22 +19,42 @@ public class Command {
         this.executor = executor;
     }
 
+    /**
+     * Get the command name
+     * @return name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Get (if specified) aliases for the command.
+     * @return aliases
+     */
     public String[] getAliases() {
         return aliases;
     }
 
+    /**
+     * Get the permission for this command.
+     * @return permission
+     */
     public String getPermission() {
         return permission;
     }
 
+    /**
+     * Get the description for this command.
+     * @return description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Get the command executor.
+     * @return command executor.
+     */
     public CommandExecutor getExecutor() {
         return executor;
     }

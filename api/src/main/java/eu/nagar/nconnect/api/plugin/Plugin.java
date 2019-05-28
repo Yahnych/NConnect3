@@ -41,18 +41,35 @@ public abstract class Plugin {
         return server;
     }
 
+    /**
+     * Get the plugin logger
+     * @return logger
+     */
     public Logger getLogger() {
         return logger;
     }
 
+    /**
+     * Get the plugin description.
+     * @return description
+     */
     public PluginDescription getDescription() {
         return description;
     }
 
+    /**
+     * Get the plugin config file.
+     * This file will need to be created by the plugin using YamlFile#createNewFile()
+     * @return yaml file.
+     */
     public YamlFile getConfig() {
         return yamlFile;
     }
 
+    /**
+     * Get the allocated plugin data folder.
+     * @return plugin folder
+     */
     public File getFolder() {
         return dataFolder;
     }
