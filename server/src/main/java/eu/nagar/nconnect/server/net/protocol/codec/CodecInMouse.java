@@ -4,7 +4,6 @@
 
 package eu.nagar.nconnect.server.net.protocol.codec;
 
-import com.google.common.primitives.UnsignedInteger;
 import eu.nagar.nconnect.server.net.protocol.Protocol;
 import eu.nagar.nconnect.server.net.protocol.packet.PacketInMouse;
 import eu.nagar.nconnect.server.net.protocol.PacketCodec;
