@@ -4,20 +4,27 @@
 
 package eu.nagar.nconnect.server.net;
 
-import eu.nagar.nconnect.server.config.ConfigOption;
 import org.java_websocket.WebSocket;
+import org.java_websocket.handshake.ClientHandshake;
 
-import java.net.InetSocketAddress;
 import java.util.HashMap;
 import java.util.Map;
 
 public class WebSocketSecurity {
-    private Map<InetSocketAddress, Long> lastConnection = new HashMap<>();
+    private static Map<String, Long> lastConnection = new HashMap<>();
+    private static final int THROTTLE_TIME = 800;
 
-    public boolean isConnectionThrottled(WebSocket socket) {
-        long lastConnectionMs = lastConnection.getOrDefault(socket.getRemoteSocketAddress(), 0L);
-        lastConnection.put(socket.getRemoteSocketAddress(), System.currentTimeMillis());
+    public boolean isThrottled(WebSocket socket, ClientHandshake handshake) {
+        String address = socket.getRemoteSocketAddress().toString();
+        if (handshake.hasFieldValue("X-Forwarded-For")) {
+            address = handshake.getFieldValue("X-Forwarded-For");
+        }
 
-        return (System.currentTimeMillis() - lastConnectionMs) <= ConfigOption.SERVER_CONNECTION_THROTTLE.getValueInt();
+        if (!lastConnection.containsKey(address)) {
+            lastConnection.put(address, System.currentTimeMillis());
+            return false;
+        }
+
+        return System.currentTimeMillis() - lastConnection.get(address) < THROTTLE_TIME;
     }
 }

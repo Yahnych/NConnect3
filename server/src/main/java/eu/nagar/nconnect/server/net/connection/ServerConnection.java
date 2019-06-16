@@ -46,6 +46,7 @@ public class ServerConnection extends WebSocketClient {
 
         ServerConnectedEvent serverConnectedEvent = new ServerConnectedEvent(player, server);
         player.getNConnectServer().getEventManager().callEvent(serverConnectedEvent);
+        player.getNConnectServer().getLogger().info(player.getSocket().getRemoteSocketAddress().toString() + " <-------> PROXY <--OPEN-> " + server.getName().toUpperCase());
     }
 
     @Override
@@ -55,25 +56,19 @@ public class ServerConnection extends WebSocketClient {
 
     @Override
     public void onMessage(ByteBuffer buffer) {
-        PacketCodec packetCodec = PacketRegister.CLIENTBOUND.getCodec(buffer.get(0));
-        if (packetCodec == null) {
-            if (player.getSocket().isOpen()) {
-                player.getSocket().send(buffer.array());
-            }
-            return;
-        }
-
-        Packet packet = packetCodec.decode(buffer, Protocol.L_6);
-
-        if (packet != null) {
-            player.getDownstreamHandler().handle(packet);
-        }
+        player.getDownstreamHandler().handle(buffer);
     }
 
     @Override
     public void onClose(int i, String s, boolean b) {
         ServerDisconnectedEvent serverDisconnectedEvent = new ServerDisconnectedEvent(player, server, i, s);
         player.getNConnectServer().getEventManager().callEvent(serverDisconnectedEvent);
+
+        if (player.getSocket() == null || player.getSocket().getRemoteSocketAddress() == null) {
+            return;
+        }
+
+        player.getNConnectServer().getLogger().info(player.getSocket().getRemoteSocketAddress().toString() + " <-------> PROXY <-CLOSE-> " + server.getName().toUpperCase());
     }
 
     @Override

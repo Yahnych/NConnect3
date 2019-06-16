@@ -9,18 +9,36 @@ import eu.nagar.nconnect.api.event.player.game.PlayerChatEvent;
 import eu.nagar.nconnect.api.event.player.game.PlayerMouseEvent;
 import eu.nagar.nconnect.api.event.player.game.PlayerSetNickEvent;
 import eu.nagar.nconnect.api.util.Position;
-import eu.nagar.nconnect.server.net.protocol.Packet;
-import eu.nagar.nconnect.server.net.protocol.PacketReceiver;
+import eu.nagar.nconnect.server.net.protocol.*;
 import eu.nagar.nconnect.server.net.protocol.packet.PacketInChat;
 import eu.nagar.nconnect.server.net.protocol.packet.PacketInMouse;
 import eu.nagar.nconnect.server.net.protocol.packet.PacketInSetNick;
 import eu.nagar.nconnect.server.player.NConnectPlayer;
 
+import java.nio.ByteBuffer;
+
 public class UpstreamHandler extends PacketReceiver {
     private NConnectPlayer player;
-
     public UpstreamHandler(NConnectPlayer player) {
         this.player = player;
+    }
+
+    @Override
+    public void handle(ByteBuffer buffer) {
+        PacketCodec packetCodec = PacketRegister.SERVERBOUND.getCodec(buffer.get(0) & 0xFF);
+        if (packetCodec == null) {
+            if (player.getServerConnection().isOpen()) {
+                player.getServerConnection().send(buffer);
+            }
+
+            return;
+        }
+
+        Packet packet = packetCodec.decode(buffer, Protocol.L_6);
+
+        if (packet != null) {
+            handle(packet);
+        }
     }
 
     @Override

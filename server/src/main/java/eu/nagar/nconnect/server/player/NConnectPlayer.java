@@ -39,9 +39,7 @@ public class NConnectPlayer implements Player {
         this.server = server;
         this.socket = socket;
 
-        if (handshake.hasFieldValue("X-Real-IP")) {
-            this.address = handshake.getFieldValue("X-Real-IP");
-        } else if (handshake.hasFieldValue("X-Forwarded-For")) {
+        if (handshake.hasFieldValue("X-Forwarded-For")) {
             this.address = handshake.getFieldValue("X-Forwarded-For");
         } else {
             this.address = socket.getRemoteSocketAddress().toString();
@@ -124,8 +122,8 @@ public class NConnectPlayer implements Player {
 
     @Override
     public void kick() {
-        socket.close();
         serverConnection.close();
+        socket.close();
     }
 
     public void sendPacket(Packet packet) {
@@ -164,4 +162,5 @@ public class NConnectPlayer implements Player {
     public NConnectServer getNConnectServer() {
         return server;
     }
+
 }

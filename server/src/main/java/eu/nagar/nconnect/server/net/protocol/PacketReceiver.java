@@ -6,7 +6,11 @@ package eu.nagar.nconnect.server.net.protocol;
 
 import eu.nagar.nconnect.server.net.protocol.packet.*;
 
+import java.nio.ByteBuffer;
+
 public abstract class PacketReceiver {
+    public abstract void handle(ByteBuffer buffer);
+
     public void handle(Packet packet) {
         packet.handle(this);
     }
@@ -30,4 +34,5 @@ public abstract class PacketReceiver {
     public void handle(PacketOutStats packet) {
 
     }
+
 }

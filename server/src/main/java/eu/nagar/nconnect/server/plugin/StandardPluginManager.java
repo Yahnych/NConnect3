@@ -4,8 +4,6 @@
 
 package eu.nagar.nconnect.server.plugin;
 
-import eu.nagar.nconnect.api.command.Command;
-import eu.nagar.nconnect.api.event.EventListener;
 import eu.nagar.nconnect.api.plugin.Plugin;
 import eu.nagar.nconnect.api.plugin.PluginDescription;
 import eu.nagar.nconnect.api.plugin.PluginManager;

@@ -29,7 +29,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 public class NConnectServer implements ProxyServer, CommandSender {
-    private static final String VERSION = "1.0.1";
+    private static final String VERSION = "1.0.3";
     private static final Logger LOGGER = LoggerFactory.getLogger("NConnect");
     private boolean isRunning;
 

@@ -6,13 +6,10 @@ package eu.nagar.nconnect.server.net;
 
 import eu.nagar.nconnect.api.event.player.PlayerConnectionEvent;
 import eu.nagar.nconnect.api.event.player.PlayerDisconnectEvent;
+import eu.nagar.nconnect.api.event.socket.SocketHandshakeEvent;
 import eu.nagar.nconnect.api.player.Player;
 import eu.nagar.nconnect.server.NConnectServer;
 import eu.nagar.nconnect.server.config.ConfigOption;
-import eu.nagar.nconnect.server.net.protocol.Packet;
-import eu.nagar.nconnect.server.net.protocol.PacketCodec;
-import eu.nagar.nconnect.server.net.protocol.PacketRegister;
-import eu.nagar.nconnect.server.net.protocol.Protocol;
 import eu.nagar.nconnect.server.player.NConnectPlayer;
 import org.java_websocket.WebSocket;
 import org.java_websocket.drafts.Draft;
@@ -21,7 +18,6 @@ import org.java_websocket.handshake.ClientHandshake;
 import org.java_websocket.handshake.ServerHandshakeBuilder;
 import org.java_websocket.server.WebSocketServer;
 
-import java.awt.*;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -43,13 +39,12 @@ public class WebSocketHandler extends WebSocketServer {
 
     @Override
     public ServerHandshakeBuilder onWebsocketHandshakeReceivedAsServer(WebSocket conn, Draft draft, ClientHandshake request) throws InvalidDataException {
-        // Connection limit
         if (socketPlayerMap.size() > ConfigOption.SERVER_MAX_CONNECTIONS.getValueInt()) {
             server.getLogger().warn("Rejected handshake from " + conn.getRemoteSocketAddress().toString() + ". Reason: Server is full!");
             throw new InvalidDataException(1);
         }
 
-        if (security.isConnectionThrottled(conn)) {
+        if (security.isThrottled(conn, request)) {
             server.getLogger().warn("Rejected handshake from " + conn.getRemoteSocketAddress().toString() + ". Reason: Connection throttled!");
             throw new InvalidDataException(1);
         }
@@ -57,14 +52,22 @@ public class WebSocketHandler extends WebSocketServer {
         ServerHandshakeBuilder builder = super.onWebsocketHandshakeReceivedAsServer(conn, draft, request);
         builder.put("X-Forwarded-For", "*");
         builder.put("X-Real-IP", "*");
+
+        SocketHandshakeEvent event = new SocketHandshakeEvent(conn, request, builder);
+        server.getEventManager().callEvent(event);
+
+        if (event.isCancelled()) {
+            throw new InvalidDataException(1);
+        }
+
         return builder;
     }
 
     @Override
     public void onOpen(WebSocket webSocket, ClientHandshake clientHandshake) {
-        NConnectPlayer player = new NConnectPlayer(server, webSocket, clientHandshake);
-        server.getLogger().info(webSocket.getRemoteSocketAddress().toString() + " Connected to the server.");
+        server.getLogger().info(webSocket.getRemoteSocketAddress().toString() + " <-OPEN--> PROXY");
 
+        NConnectPlayer player = new NConnectPlayer(server, webSocket, clientHandshake);
         PlayerConnectionEvent playerConnectionEvent = new PlayerConnectionEvent(player);
         server.getEventManager().callEvent(playerConnectionEvent);
 
@@ -73,13 +76,11 @@ public class WebSocketHandler extends WebSocketServer {
         }
 
         socketPlayerMap.put(webSocket, player);
-        server.getLogger().info(webSocket.getRemoteSocketAddress().toString() + " Connected to the server.");
-        player.sendMessage("NConnect N3", Color.RED);
     }
 
     @Override
     public void onClose(WebSocket webSocket, int i, String reason, boolean b) {
-        server.getLogger().info(webSocket.getRemoteSocketAddress().toString() + " Disconnected.");
+        server.getLogger().info(webSocket.getRemoteSocketAddress().toString() + " <-CLOSE-> PROXY");
         Player player = socketPlayerMap.get(webSocket);
 
         PlayerDisconnectEvent playerDisconnectEvent = new PlayerDisconnectEvent(player, i, reason);
@@ -109,21 +110,7 @@ public class WebSocketHandler extends WebSocketServer {
         }
 
         buffer.order(ByteOrder.LITTLE_ENDIAN);
-
-        PacketCodec packetCodec = PacketRegister.SERVERBOUND.getCodec(buffer.get(0));
-        if (packetCodec == null) {
-            if (player.getServerConnection().isOpen()) {
-                player.getServerConnection().send(buffer);
-            }
-
-            return;
-        }
-
-        Packet packet = packetCodec.decode(buffer, Protocol.L_6);
-
-        if (packet != null) {
-            player.getUpstreamHandler().handle(packet);
-        }
+        player.getUpstreamHandler().handle(buffer);
     }
 
     @Override
