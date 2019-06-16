@@ -21,13 +21,6 @@ public class DownstreamHandler extends PacketReceiver {
 
     @Override
     public void handle(ByteBuffer buffer) {
-        PacketReceivedEvent packetReceivedEvent = new PacketReceivedEvent(player, buffer);
-        player.getNConnectServer().getEventManager().callEvent(packetReceivedEvent);
-
-        if (packetReceivedEvent.isCancelled()) {
-            return;
-        }
-
         PacketCodec packetCodec = PacketRegister.CLIENTBOUND.getCodec(buffer.get(0));
         if (packetCodec == null) {
             if (player.getSocket().isOpen()) {

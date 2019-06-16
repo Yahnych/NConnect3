@@ -5,6 +5,7 @@
 package eu.nagar.nconnect.server.net.connection.bridge;
 
 import eu.nagar.nconnect.api.command.CommandResult;
+import eu.nagar.nconnect.api.event.packet.PacketReceivedEvent;
 import eu.nagar.nconnect.api.event.player.game.PlayerChatEvent;
 import eu.nagar.nconnect.api.event.player.game.PlayerMouseEvent;
 import eu.nagar.nconnect.api.event.player.game.PlayerSetNickEvent;
@@ -25,6 +26,13 @@ public class UpstreamHandler extends PacketReceiver {
 
     @Override
     public void handle(ByteBuffer buffer) {
+        PacketReceivedEvent packetReceivedEvent = new PacketReceivedEvent(player, buffer);
+        player.getNConnectServer().getEventManager().callEvent(packetReceivedEvent);
+
+        if (packetReceivedEvent.isCancelled()) {
+            return;
+        }
+
         PacketCodec packetCodec = PacketRegister.SERVERBOUND.getCodec(buffer.get(0) & 0xFF);
         if (packetCodec == null) {
             if (player.getServerConnection().isOpen()) {
