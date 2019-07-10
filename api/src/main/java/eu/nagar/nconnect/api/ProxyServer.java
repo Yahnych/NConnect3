@@ -7,7 +7,7 @@ package eu.nagar.nconnect.api;
 import eu.nagar.nconnect.api.command.CommandManager;
 import eu.nagar.nconnect.api.event.EventManager;
 import eu.nagar.nconnect.api.player.Player;
-import eu.nagar.nconnect.api.plugin.PluginManager;
+import eu.nagar.nconnect.api.extension.ExtensionManager;
 import eu.nagar.nconnect.api.server.ServerManager;
 import org.slf4j.Logger;
 
@@ -36,7 +36,7 @@ public interface ProxyServer {
      * Get the server plugin manager
      * @return plugin manager
      */
-    PluginManager getPluginManager();
+    ExtensionManager getExtensionManager();
 
     /**
      * Get the event manager

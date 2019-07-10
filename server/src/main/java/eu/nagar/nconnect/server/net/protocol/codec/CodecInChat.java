@@ -4,8 +4,8 @@
 
 package eu.nagar.nconnect.server.net.protocol.codec;
 
+import eu.nagar.nconnect.api.net.protocol.Protocol;
 import eu.nagar.nconnect.server.net.protocol.PacketCodec;
-import eu.nagar.nconnect.server.net.protocol.Protocol;
 import eu.nagar.nconnect.server.net.protocol.packet.PacketInChat;
 import eu.nagar.nconnect.server.util.BinaryUtils;
 
@@ -25,7 +25,7 @@ public class CodecInChat implements PacketCodec<PacketInChat> {
 
     @Override
     public ByteBuffer encode(PacketInChat payload, Protocol protocol) {
-        ByteBuffer buffer = ByteBuffer.allocate(100);
+        ByteBuffer buffer = ByteBuffer.allocate(255);
 
         buffer.put((byte) 99);
         buffer.put((byte) 0);

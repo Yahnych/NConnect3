@@ -4,7 +4,7 @@
 
 package eu.nagar.nconnect.api.event;
 
-import eu.nagar.nconnect.api.plugin.Plugin;
+import eu.nagar.nconnect.api.extension.Extension;
 
 public interface EventManager {
     /**
@@ -15,15 +15,15 @@ public interface EventManager {
 
     /**
      * Register events from a class
-     * @param plugin plugin instance
+     * @param extension extension instance
      * @param listener class
      */
-    void registerEvents(Plugin plugin, EventListener listener);
+    void registerEvents(Extension extension, EventListener listener);
 
     /**
-     * Unregister all events from a plugin.
+     * Unregister all events from a extension.
      */
-    void unregisterEvents(Plugin plugin);
+    void unregisterEvents(Extension extension);
 
     /**
      * Unregister all events.

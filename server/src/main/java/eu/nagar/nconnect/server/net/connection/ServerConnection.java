@@ -6,24 +6,25 @@ package eu.nagar.nconnect.server.net.connection;
 
 import eu.nagar.nconnect.api.event.server.ServerConnectedEvent;
 import eu.nagar.nconnect.api.event.server.ServerDisconnectedEvent;
+import eu.nagar.nconnect.api.net.protocol.Protocol;
 import eu.nagar.nconnect.api.server.GameServer;
 import eu.nagar.nconnect.server.net.protocol.Packet;
 import eu.nagar.nconnect.server.net.protocol.PacketCodec;
 import eu.nagar.nconnect.server.net.protocol.PacketRegister;
-import eu.nagar.nconnect.server.net.protocol.Protocol;
-import eu.nagar.nconnect.server.player.NConnectPlayer;
+import eu.nagar.nconnect.server.player.PlayerImpl;
 import org.java_websocket.client.WebSocketClient;
 import org.java_websocket.handshake.ServerHandshake;
 
+import java.io.IOException;
 import java.net.URI;
 import java.nio.ByteBuffer;
 import java.util.Map;
 
 public class ServerConnection extends WebSocketClient {
-    private NConnectPlayer player;
+    private PlayerImpl player;
     private GameServer server;
 
-    public ServerConnection(NConnectPlayer player, GameServer server, URI serverUri, Map<String, String> httpHeaders) {
+    public ServerConnection(PlayerImpl player, GameServer server, URI serverUri, Map<String, String> httpHeaders) {
         super(serverUri, httpHeaders);
         this.player = player;
         this.server = server;
@@ -35,15 +36,12 @@ public class ServerConnection extends WebSocketClient {
     public void sendPacket(Packet packet) {
         PacketCodec packetCodec = PacketRegister.SERVERBOUND.getCodec(packet.getClass());
         if (this.isOpen()) {
-            this.send(packetCodec.encode(packet, Protocol.L_6).array());
+            this.send(packetCodec.encode(packet, Protocol.LEGACY_6).array());
         }
     }
 
     @Override
     public void onOpen(ServerHandshake serverHandshake) {
-        send(new byte[] {(byte) 254, 6, 0, 0, 0});
-        send(new byte[] {(byte) 255, 1, 0, 0, 0});
-
         ServerConnectedEvent serverConnectedEvent = new ServerConnectedEvent(player, server);
         player.getNConnectServer().getEventManager().callEvent(serverConnectedEvent);
         player.getNConnectServer().getLogger().info(player.getSocket().getRemoteSocketAddress().toString() + " <-------> PROXY <--OPEN-> " + server.getName().toUpperCase());

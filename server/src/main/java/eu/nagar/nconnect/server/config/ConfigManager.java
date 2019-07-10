@@ -4,9 +4,8 @@
 
 package eu.nagar.nconnect.server.config;
 
-import eu.nagar.nconnect.api.ProxyServer;
 import eu.nagar.nconnect.api.server.GameServer;
-import eu.nagar.nconnect.server.NConnectGameServer;
+import eu.nagar.nconnect.server.gameserver.GameServerImpl;
 import eu.nagar.nconnect.server.NConnectServer;
 import org.simpleyaml.configuration.ConfigurationSection;
 import org.simpleyaml.configuration.file.YamlConfiguration;
@@ -77,7 +76,7 @@ public class ConfigManager {
             String address = serverSection.getString("address");
             List<String> motd = serverSection.getStringList("motd");
 
-            GameServer server = new NConnectGameServer(serverName, address, motd);
+            GameServer server = new GameServerImpl(serverName, address, motd);
             this.server.getServerManager().registerServer(server);
             this.server.getLogger().info("Loaded game server '" + serverName + "'.");
         }

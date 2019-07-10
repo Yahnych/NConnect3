@@ -4,6 +4,8 @@
 
 package eu.nagar.nconnect.server.net.protocol;
 
+import eu.nagar.nconnect.api.net.protocol.Protocol;
+
 import java.nio.ByteBuffer;
 
 public interface PacketCodec<T extends Packet> {

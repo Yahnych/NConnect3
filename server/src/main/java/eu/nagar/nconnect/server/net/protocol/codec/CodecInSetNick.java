@@ -4,8 +4,8 @@
 
 package eu.nagar.nconnect.server.net.protocol.codec;
 
+import eu.nagar.nconnect.api.net.protocol.Protocol;
 import eu.nagar.nconnect.server.net.protocol.PacketCodec;
-import eu.nagar.nconnect.server.net.protocol.Protocol;
 import eu.nagar.nconnect.server.net.protocol.packet.PacketInSetNick;
 import eu.nagar.nconnect.server.util.BinaryUtils;
 

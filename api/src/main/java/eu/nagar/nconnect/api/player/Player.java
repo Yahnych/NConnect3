@@ -5,6 +5,7 @@
 package eu.nagar.nconnect.api.player;
 
 import eu.nagar.nconnect.api.command.CommandSender;
+import eu.nagar.nconnect.api.net.protocol.Protocol;
 import eu.nagar.nconnect.api.server.GameServer;
 import eu.nagar.nconnect.api.util.Position;
 
@@ -32,6 +33,12 @@ public interface Player extends CommandSender {
      * @return game server
      */
     GameServer getGameServer();
+
+    /**
+     * Get the agreed protocol between the client and server
+     * @return protocol
+     */
+    Protocol getProtocol();
 
     /**
      * Connect to a server

@@ -30,7 +30,7 @@ public class VanillaCommands implements CommandRegistrar {
                 .setName("plugins")
                 .setDescription("Display enabled plugins")
                 .setPermission("nconnect.plugins")
-                .setExecutor(new PluginsExecutor(server))
+                .setExecutor(new ExtensionsExecutor(server))
                 .build();
 
         Command exit = new CommandBuilder()

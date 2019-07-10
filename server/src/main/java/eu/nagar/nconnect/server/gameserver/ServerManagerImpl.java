@@ -2,7 +2,7 @@
  * Copyright (c) 2016 - 2019  Nagar Group
  */
 
-package eu.nagar.nconnect.server;
+package eu.nagar.nconnect.server.gameserver;
 
 import eu.nagar.nconnect.api.server.GameServer;
 import eu.nagar.nconnect.api.server.ServerManager;
@@ -10,7 +10,7 @@ import eu.nagar.nconnect.api.server.ServerManager;
 import java.util.HashSet;
 import java.util.Set;
 
-public class NConnectServerManager implements ServerManager {
+public class ServerManagerImpl implements ServerManager {
     private Set<GameServer> servers = new HashSet<>();
 
     @Override

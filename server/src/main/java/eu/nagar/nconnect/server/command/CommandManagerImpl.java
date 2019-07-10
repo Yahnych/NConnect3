@@ -13,11 +13,11 @@ import eu.nagar.nconnect.server.NConnectServer;
 import java.awt.*;
 import java.util.*;
 
-public class StandardCommandManager implements CommandManager {
+public class CommandManagerImpl implements CommandManager {
     private NConnectServer server;
     private Multimap<CommandRegistrar, Command> registeredCommands = ArrayListMultimap.create();
 
-    public StandardCommandManager(NConnectServer server) {
+    public CommandManagerImpl(NConnectServer server) {
         this.server = server;
     }
 

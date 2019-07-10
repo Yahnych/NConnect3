@@ -23,12 +23,12 @@ public class ReloadExecutor implements CommandExecutor {
         long start = System.currentTimeMillis();
 
         sender.sendMessage("Reloading NConnect...", Color.RED);
-        server.getPluginManager().disablePlugins();
+        server.getExtensionManager().disableExtensions();
         server.getEventManager().unregisterEvents();
-        server.getPluginManager().loadPlugins();
-        server.getPluginManager().enablePlugins();
+        server.getExtensionManager().loadExtensions();
+        server.getExtensionManager().enableExtensions();
 
         long end = System.currentTimeMillis();
-        sender.sendMessage("Reloaded plugins in " + (end - start) + "ms.");
+        sender.sendMessage("Reloaded extensions in " + (end - start) + "ms.");
     }
 }

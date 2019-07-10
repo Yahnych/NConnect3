@@ -4,7 +4,7 @@
 
 package eu.nagar.nconnect.server.net.protocol.codec;
 
-import eu.nagar.nconnect.server.net.protocol.Protocol;
+import eu.nagar.nconnect.api.net.protocol.Protocol;
 import eu.nagar.nconnect.server.net.protocol.packet.PacketInMouse;
 import eu.nagar.nconnect.server.net.protocol.PacketCodec;
 

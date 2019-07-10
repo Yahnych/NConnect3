@@ -2,7 +2,7 @@
  * Copyright (c) 2016 - 2019  Nagar Group
  */
 
-package eu.nagar.nconnect.api.plugin;
+package eu.nagar.nconnect.api.extension;
 
 import eu.nagar.nconnect.api.ProxyServer;
 import eu.nagar.nconnect.api.command.CommandRegistrar;
@@ -11,18 +11,18 @@ import org.slf4j.Logger;
 
 import java.io.File;
 
-public abstract class Plugin implements CommandRegistrar {
+public abstract class Extension implements CommandRegistrar {
     private ProxyServer server;
     private Logger logger;
-    private PluginDescription description;
+    private ExtensionDescription description;
     private YamlFile yamlFile;
     private File dataFolder;
 
-    protected Plugin() {
+    protected Extension() {
 
     }
 
-    public void init(ProxyServer server, Logger logger, PluginDescription description, YamlFile yamlFile, File dataFolder) {
+    public void init(ProxyServer server, Logger logger, ExtensionDescription description, YamlFile yamlFile, File dataFolder) {
         this.server = server;
         this.logger = logger;
         this.description = description;
@@ -54,7 +54,7 @@ public abstract class Plugin implements CommandRegistrar {
      * Get the plugin description.
      * @return description
      */
-    public PluginDescription getDescription() {
+    public ExtensionDescription getDescription() {
         return description;
     }
 

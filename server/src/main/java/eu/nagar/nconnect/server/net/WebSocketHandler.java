@@ -10,7 +10,7 @@ import eu.nagar.nconnect.api.event.socket.SocketHandshakeEvent;
 import eu.nagar.nconnect.api.player.Player;
 import eu.nagar.nconnect.server.NConnectServer;
 import eu.nagar.nconnect.server.config.ConfigOption;
-import eu.nagar.nconnect.server.player.NConnectPlayer;
+import eu.nagar.nconnect.server.player.PlayerImpl;
 import org.java_websocket.WebSocket;
 import org.java_websocket.drafts.Draft;
 import org.java_websocket.exceptions.InvalidDataException;
@@ -28,7 +28,7 @@ import java.util.Map;
 public class WebSocketHandler extends WebSocketServer {
     private NConnectServer server;
     private WebSocketSecurity security = new WebSocketSecurity();
-    private Map<WebSocket, NConnectPlayer> socketPlayerMap = new HashMap<>();
+    private Map<WebSocket, PlayerImpl> socketPlayerMap = new HashMap<>();
 
     public WebSocketHandler(NConnectServer server) {
         super(new InetSocketAddress(ConfigOption.SERVER_PORT.getValueInt()));
@@ -67,7 +67,7 @@ public class WebSocketHandler extends WebSocketServer {
     public void onOpen(WebSocket webSocket, ClientHandshake clientHandshake) {
         server.getLogger().info(webSocket.getRemoteSocketAddress().toString() + " <-OPEN--> PROXY");
 
-        NConnectPlayer player = new NConnectPlayer(server, webSocket, clientHandshake);
+        PlayerImpl player = new PlayerImpl(server, webSocket, clientHandshake);
         PlayerConnectionEvent playerConnectionEvent = new PlayerConnectionEvent(player);
         server.getEventManager().callEvent(playerConnectionEvent);
 
@@ -95,7 +95,7 @@ public class WebSocketHandler extends WebSocketServer {
 
     @Override
     public void onMessage(WebSocket webSocket, ByteBuffer buffer) {
-        NConnectPlayer player = socketPlayerMap.get(webSocket);
+        PlayerImpl player = socketPlayerMap.get(webSocket);
         if (player == null) {
             webSocket.close();
             return;
@@ -105,7 +105,7 @@ public class WebSocketHandler extends WebSocketServer {
             return;
         }
 
-        if (buffer.limit() > 255) {
+        if (buffer.limit() > 512) {
             return;
         }
 
@@ -124,7 +124,7 @@ public class WebSocketHandler extends WebSocketServer {
         server.getLogger().info("Server accepting connections on port " + getPort() + ".");
     }
 
-    public Collection<NConnectPlayer> getConnectedPlayers() {
+    public Collection<PlayerImpl> getConnectedPlayers() {
         return socketPlayerMap.values();
     }
 }

@@ -4,18 +4,19 @@
 
 package eu.nagar.nconnect.server.net.connection.bridge;
 
-import eu.nagar.nconnect.api.event.packet.PacketReceivedEvent;
+import eu.nagar.nconnect.api.event.server.ServerStatsEvent;
+import eu.nagar.nconnect.api.net.protocol.Protocol;
 import eu.nagar.nconnect.server.net.protocol.*;
 import eu.nagar.nconnect.server.net.protocol.packet.PacketOutChat;
 import eu.nagar.nconnect.server.net.protocol.packet.PacketOutStats;
-import eu.nagar.nconnect.server.player.NConnectPlayer;
+import eu.nagar.nconnect.server.player.PlayerImpl;
 
 import java.nio.ByteBuffer;
 
 public class DownstreamHandler extends PacketReceiver {
-    private NConnectPlayer player;
+    private PlayerImpl player;
 
-    public DownstreamHandler(NConnectPlayer player) {
+    public DownstreamHandler(PlayerImpl player) {
         this.player = player;
     }
 
@@ -29,7 +30,7 @@ public class DownstreamHandler extends PacketReceiver {
             return;
         }
 
-        Packet packet = packetCodec.decode(buffer, Protocol.L_6);
+        Packet packet = packetCodec.decode(buffer, Protocol.LEGACY_6);
 
         if (packet != null) {
             player.getDownstreamHandler().handle(packet);
@@ -48,10 +49,11 @@ public class DownstreamHandler extends PacketReceiver {
 
     @Override
     public void handle(PacketOutStats packet) {
-        /*ServerStatsEvent serverStatsEvent = new ServerStatsEvent();
+        ServerStatsEvent serverStatsEvent = new ServerStatsEvent(player, packet.getStats());
         player.getNConnectServer().getEventManager().callEvent(serverStatsEvent);
-         //TODO TODO
-        packet.setStats(serverStatsEvent.getStats());**/
-        player.sendPacket(packet);
+        if (!serverStatsEvent.isCancelled()) {
+            packet.setStats(serverStatsEvent.getStatsString());
+            player.sendPacket(packet);
+        }
     }
 }

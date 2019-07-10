@@ -4,6 +4,7 @@
 
 package eu.nagar.nconnect.server.player;
 
+import eu.nagar.nconnect.api.net.protocol.Protocol;
 import eu.nagar.nconnect.api.player.Player;
 import eu.nagar.nconnect.api.server.GameServer;
 import eu.nagar.nconnect.api.util.Position;
@@ -14,7 +15,6 @@ import eu.nagar.nconnect.server.net.connection.bridge.UpstreamHandler;
 import eu.nagar.nconnect.server.net.protocol.Packet;
 import eu.nagar.nconnect.server.net.protocol.PacketCodec;
 import eu.nagar.nconnect.server.net.protocol.PacketRegister;
-import eu.nagar.nconnect.server.net.protocol.Protocol;
 import eu.nagar.nconnect.server.net.protocol.packet.PacketOutChat;
 import org.java_websocket.WebSocket;
 import org.java_websocket.handshake.ClientHandshake;
@@ -24,7 +24,7 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.HashMap;
 
-public class NConnectPlayer implements Player {
+public class PlayerImpl implements Player {
     private NConnectServer server;
     private String name = "";
     private String address;
@@ -35,7 +35,7 @@ public class NConnectPlayer implements Player {
     private DownstreamHandler downstreamHandler;
     private UpstreamHandler upstreamHandler;
 
-    public NConnectPlayer(NConnectServer server, WebSocket socket, ClientHandshake handshake) {
+    public PlayerImpl(NConnectServer server, WebSocket socket, ClientHandshake handshake) {
         this.server = server;
         this.socket = socket;
 
@@ -121,6 +121,11 @@ public class NConnectPlayer implements Player {
     }
 
     @Override
+    public Protocol getProtocol() {
+        return Protocol.LEGACY_6;
+    }
+
+    @Override
     public void kick() {
         serverConnection.close();
         socket.close();
@@ -129,7 +134,7 @@ public class NConnectPlayer implements Player {
     public void sendPacket(Packet packet) {
         PacketCodec packetCodec = PacketRegister.CLIENTBOUND.getCodec(packet.getClass());
         if (socket.isOpen()) {
-            socket.send(packetCodec.encode(packet, Protocol.L_6).array());
+            socket.send(packetCodec.encode(packet, Protocol.LEGACY_6).array());
         }
     }
 

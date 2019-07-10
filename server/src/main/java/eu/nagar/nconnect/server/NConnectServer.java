@@ -10,15 +10,16 @@ import eu.nagar.nconnect.api.command.CommandResult;
 import eu.nagar.nconnect.api.command.CommandSender;
 import eu.nagar.nconnect.api.event.EventManager;
 import eu.nagar.nconnect.api.player.Player;
-import eu.nagar.nconnect.api.plugin.PluginManager;
+import eu.nagar.nconnect.api.extension.ExtensionManager;
 
 import eu.nagar.nconnect.api.server.ServerManager;
-import eu.nagar.nconnect.server.command.StandardCommandManager;
+import eu.nagar.nconnect.server.command.CommandManagerImpl;
 import eu.nagar.nconnect.server.command.VanillaCommands;
 import eu.nagar.nconnect.server.config.ConfigManager;
-import eu.nagar.nconnect.server.event.StandardEventManager;
+import eu.nagar.nconnect.server.event.EventManagerImpl;
+import eu.nagar.nconnect.server.gameserver.ServerManagerImpl;
 import eu.nagar.nconnect.server.net.WebSocketHandler;
-import eu.nagar.nconnect.server.plugin.StandardPluginManager;
+import eu.nagar.nconnect.server.extension.ExtensionManagerImpl;
 import org.jline.reader.LineReader;
 import org.jline.reader.LineReaderBuilder;
 import org.slf4j.Logger;
@@ -29,16 +30,16 @@ import java.util.Collection;
 import java.util.HashSet;
 
 public class NConnectServer implements ProxyServer, CommandSender {
-    private static final String VERSION = "1.0.3";
+    private static final String VERSION = "1.0.4";
     private static final Logger LOGGER = LoggerFactory.getLogger("NConnect");
     private boolean isRunning;
 
     private WebSocketHandler webSocketHandler;
     private ConfigManager configManager = new ConfigManager(this);
-    private NConnectServerManager serverManager = new NConnectServerManager();
-    private StandardEventManager eventManager = new StandardEventManager();
-    private StandardCommandManager commandManager = new StandardCommandManager(this);
-    private StandardPluginManager pluginManager = new StandardPluginManager(this);
+    private ServerManagerImpl serverManager = new ServerManagerImpl();
+    private EventManagerImpl eventManager = new EventManagerImpl();
+    private CommandManagerImpl commandManager = new CommandManagerImpl(this);
+    private ExtensionManagerImpl extensionManager = new ExtensionManagerImpl(this);
 
     @Override
     public String getVersion() {
@@ -62,8 +63,8 @@ public class NConnectServer implements ProxyServer, CommandSender {
         configManager.load();
         webSocketHandler = new WebSocketHandler(this);
         webSocketHandler.start();
-        pluginManager.loadPlugins();
-        pluginManager.enablePlugins();
+        extensionManager.loadExtensions();
+        extensionManager.enableExtensions();
 
         isRunning = true;
         LineReader lineReader = LineReaderBuilder.builder()
@@ -84,8 +85,8 @@ public class NConnectServer implements ProxyServer, CommandSender {
     }
 
     @Override
-    public PluginManager getPluginManager() {
-        return pluginManager;
+    public ExtensionManager getExtensionManager() {
+        return extensionManager;
     }
 
     @Override
@@ -111,7 +112,7 @@ public class NConnectServer implements ProxyServer, CommandSender {
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        pluginManager.disablePlugins();
+        extensionManager.disableExtensions();
         System.exit(1);
     }
 

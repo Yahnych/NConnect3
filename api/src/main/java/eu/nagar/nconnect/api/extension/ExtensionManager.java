@@ -2,36 +2,36 @@
  * Copyright (c) 2016 - 2019  Nagar Group
  */
 
-package eu.nagar.nconnect.api.plugin;
+package eu.nagar.nconnect.api.extension;
 
 import java.util.Collection;
 
-public interface PluginManager {
+public interface ExtensionManager {
     /**
      * Get specified plugin by it's name
      * @param name plugin name.
      * @return plugin instance.
      */
-    Plugin getPlugin(String name);
+    Extension getExtension(String name);
 
     /**
      * Get all loaded plugins
      * @return collection of loaded plugins
      */
-    Collection<Plugin> getPlugins();
+    Collection<Extension> getExtensions();
 
     /**
      * Load plugins.
      */
-    void loadPlugins();
+    void loadExtensions();
 
     /**
      * Enable all loaded plugins.
      */
-    void enablePlugins();
+    void enableExtensions();
 
     /**
      * Disable all loaded plugins.
      */
-    void disablePlugins();
+    void disableExtensions();
 }

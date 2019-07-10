@@ -4,8 +4,8 @@
 
 package eu.nagar.nconnect.server.net.protocol.codec;
 
+import eu.nagar.nconnect.api.net.protocol.Protocol;
 import eu.nagar.nconnect.server.net.protocol.PacketCodec;
-import eu.nagar.nconnect.server.net.protocol.Protocol;
 import eu.nagar.nconnect.server.net.protocol.packet.PacketOutChat;
 import eu.nagar.nconnect.server.util.BinaryUtils;
 
@@ -32,7 +32,7 @@ public class CodecOutChat implements PacketCodec<PacketOutChat> {
 
     @Override
     public ByteBuffer encode(PacketOutChat payload, Protocol protocol) {
-        ByteBuffer buffer = ByteBuffer.allocate(256);
+        ByteBuffer buffer = ByteBuffer.allocate(255);
 
         buffer.put((byte) 0x63);
         buffer.put((byte) 0);

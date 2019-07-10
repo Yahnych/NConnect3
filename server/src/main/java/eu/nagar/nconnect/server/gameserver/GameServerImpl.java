@@ -2,17 +2,17 @@
  * Copyright (c) 2016 - 2019  Nagar Group
  */
 
-package eu.nagar.nconnect.server;
+package eu.nagar.nconnect.server.gameserver;
 
 import eu.nagar.nconnect.api.server.GameServer;
 
 import java.util.List;
 
-public class NConnectGameServer implements GameServer {
+public class GameServerImpl implements GameServer {
     private String name, address;
     private List<String> motd;
 
-    public NConnectGameServer(String name, String address, List<String> motd) {
+    public GameServerImpl(String name, String address, List<String> motd) {
         this.name = name;
         this.address = address;
         this.motd = motd;

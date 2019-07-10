@@ -8,13 +8,13 @@ import eu.nagar.nconnect.api.event.Event;
 import eu.nagar.nconnect.api.event.EventHandler;
 import eu.nagar.nconnect.api.event.EventListener;
 import eu.nagar.nconnect.api.event.EventManager;
-import eu.nagar.nconnect.api.plugin.Plugin;
+import eu.nagar.nconnect.api.extension.Extension;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.*;
 
-public class StandardEventManager implements EventManager {
+public class EventManagerImpl implements EventManager {
     private List<RegisteredEventHandler> eventHandlers = new ArrayList<>();
 
     @Override
@@ -31,7 +31,7 @@ public class StandardEventManager implements EventManager {
     }
 
     @Override
-    public void registerEvents(Plugin plugin, EventListener listener) {
+    public void registerEvents(Extension extension, EventListener listener) {
         Method[] listenerMethods = listener.getClass().getDeclaredMethods();
         for (Method possibleEventHandler : listenerMethods) {
             if (!possibleEventHandler.isAnnotationPresent(EventHandler.class)) {
@@ -46,7 +46,7 @@ public class StandardEventManager implements EventManager {
             Class<?> eventTypeArg = methodArgs[0];
             EventHandler eventHandler = possibleEventHandler.getAnnotation(EventHandler.class);
             RegisteredEventHandler registeredEventHandler = new RegisteredEventHandler(
-                    plugin,
+                    extension,
                     eventHandler,
                     listener,
                     possibleEventHandler,
@@ -63,8 +63,8 @@ public class StandardEventManager implements EventManager {
     }
 
     @Override
-    public void unregisterEvents(Plugin plugin) {
-        eventHandlers.removeIf(eventHandler -> eventHandler.getPlugin() == plugin);
+    public void unregisterEvents(Extension extension) {
+        eventHandlers.removeIf(eventHandler -> eventHandler.getExtension() == extension);
     }
 
     @Override
